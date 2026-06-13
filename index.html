@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sasmita Jati</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        // Konfigurasi warna kustom Tailwind (Palet Wening Kalbu)
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        mystic: {
+                            500: '#D4AF37', // Emas (Gold)
+                            600: '#B5952F', // Emas Gelap (Hover)
+                            900: '#1A1D23', // Hitam Kebiruan (Midnight Blue)
+                        },
+                        sasmita: {
+                            light: '#F4F1EA', // Krem pucat / Kertas kuno
+                            dark: '#1A1D23',  // Midnight blue
+                            cardDark: '#242830' // Warna kartu di dark mode
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Lora', 'serif'], // Font tubuh yang anggun
+                        serif: ['"Playfair Display"', 'serif'], // Font judul yang premium
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        dialog::backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); }
+        .slide-item { transition: opacity 0.8s ease-in-out; }
+    </style>
+</head>
+<body class="bg-sasmita-light text-gray-800 dark:bg-sasmita-dark dark:text-[#E5E7EB] transition-colors duration-300 font-sans min-h-screen flex flex-col">
+
+    <nav class="sticky top-0 z-50 bg-sasmita-light/90 dark:bg-sasmita-dark/90 backdrop-blur-md shadow-sm border-b border-[#D4AF37]/20 dark:border-[#D4AF37]/20">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div id="navbar-brand" class="text-2xl font-bold text-mystic-600 dark:text-mystic-500 flex items-center gap-3 font-serif">
+                </div>
+            
+            <div class="flex items-center gap-4">
+                <button onclick="toggleTheme()" class="p-2 rounded-full text-mystic-600 dark:text-mystic-500 hover:bg-black/5 dark:hover:bg-white/5 transition">
+                    <i id="theme-icon" class="fa-solid fa-moon text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="max-w-6xl mx-auto px-4 py-10 md:py-16 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 tracking-wide font-serif text-gray-900 dark:text-white">Temukan Kedamaian & Keseimbangan</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-2 max-w-2xl mx-auto italic">Koleksi produk kristal, dupa herbal, dan layanan konsultasi spiritual.</p>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 pb-20 flex-grow w-full">
+        
+        <section id="banner-slider" class="relative w-full aspect-[10/9] md:aspect-[2/1] rounded-xl overflow-hidden mb-12 shadow-lg border border-[#D4AF37]/30 group hidden">
+            <div id="banner-container" class="w-full h-full relative">
+                </div>
+            <div id="banner-dots" class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20"></div>
+        </section>
+
+        <div id="product-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            </div>
+    </main>
+
+    <footer class="bg-white/50 dark:bg-sasmita-dark border-t border-[#D4AF37]/30 py-8 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-600 dark:text-gray-400 font-serif">
+            <p id="footer-copyright"></p>
+        </div>
+    </footer>
+
+    <dialog id="checkout-modal" class="rounded-xl shadow-2xl p-0 w-full max-w-md bg-sasmita-light dark:bg-sasmita-cardDark dark:text-white border border-[#D4AF37]/50">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-6 border-b border-[#D4AF37]/20 pb-3">
+                <h3 class="text-2xl font-bold font-serif text-mystic-600 dark:text-mystic-500">Formulir Pemesanan</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-red-500 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div id="modal-product-info" class="mb-6 p-4 bg-white/50 dark:bg-sasmita-dark rounded-lg flex items-center gap-4 border border-[#D4AF37]/20"></div>
+            <form id="checkout-form" class="space-y-4">
+                <input type="hidden" id="checkout-product-name">
+                <input type="hidden" id="checkout-product-price">
+                <div>
+                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">Nama Lengkap</label>
+                    <input type="text" id="cust-name" required class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-sasmita-dark outline-none focus:ring-2 focus:ring-mystic-500 transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">Nomor WhatsApp / HP</label>
+                    <input type="text" id="cust-phone" required class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-sasmita-dark outline-none focus:ring-2 focus:ring-mystic-500 transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-1 dark:text-gray-300">Alamat Lengkap</label>
+                    <textarea id="cust-address" rows="3" required class="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-sasmita-dark outline-none focus:ring-2 focus:ring-mystic-500 transition"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-mystic-500 hover:bg-mystic-600 text-sasmita-dark font-bold py-3 px-4 rounded-lg flex justify-center items-center gap-2 transition shadow-md mt-2">
+                    <i class="fa-brands fa-whatsapp text-xl"></i> Kirim Pesanan
+                </button>
+            </form>
+        </div>
+    </dialog>
+
+    <script>
+        /* ==================================================================
+           1. PENGATURAN UTAMA
+           ================================================================== */
+        
+        const NOMOR_WHATSAPP = "6282299991042"; 
+        const NAMA_WEBSITE = "SASMITA JATI";
+        const LOGO_URL = "https://github.com/artafortuna/website1/blob/main/sasmita%20jati.png?raw=true"; 
+        const TEKS_HAK_CIPTA = "© 2026 Sasmita Jati. Semua Hak Cipta Dilindungi.";
+
+        const DATA_BANNER = [
+            { img: "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?auto=format&fit=crop&w=1200&q=80" },
+            { img: "https://images.unsplash.com/photo-1602198943714-3e91122a20fc?auto=format&fit=crop&w=1200&q=80" }
+        ];
+
+        const DATA_PRODUK = [
+            { id: 1, name: "Gelang Kristal Amethyst", price: 150000, img: "https://images.unsplash.com/photo-1598514982205-f36b96d1e8d4?auto=format&fit=crop&w=500&q=80" },
+            { id: 2, name: "Dupa Kemenyan Organik", price: 75000, img: "https://images.unsplash.com/photo-1608681283626-d62fccae3671?auto=format&fit=crop&w=500&q=80" },
+            { id: 3, name: "Konsultasi Tarot (45 Menit)", price: 250000, img: "https://images.unsplash.com/photo-1629851007865-1d4287661b6c?auto=format&fit=crop&w=500&q=80" },
+            { id: 4, name: "Minyak Aromaterapi Healing", price: 120000, img: "https://images.unsplash.com/photo-1608222351212-18fe0ec7b13b?auto=format&fit=crop&w=500&q=80" }
+        ];
+
+        /* ==================================================================
+           2. SISTEM UTAMA
+           ================================================================== */
+
+        function renderHeaderFooter() {
+            const brandContainer = document.getElementById('navbar-brand');
+            if (LOGO_URL.trim() !== "") {
+                brandContainer.innerHTML = `
+                    <img src="${LOGO_URL}" alt="Logo" class="h-8 md:h-10 object-contain rounded">
+                    <span class="tracking-tight uppercase">${NAMA_WEBSITE}</span>
+                `;
+            } else {
+                brandContainer.innerHTML = `
+                    <i class="fa-solid fa-om text-mystic-500"></i> 
+                    <span class="tracking-tight uppercase">${NAMA_WEBSITE}</span>
+                `;
+            }
+            document.getElementById('footer-copyright').innerText = TEKS_HAK_CIPTA;
+        }
+
+        let currentSlide = 0;
+        function renderBanners() {
+            const sliderSection = document.getElementById('banner-slider');
+            const container = document.getElementById('banner-container');
+            const dotsContainer = document.getElementById('banner-dots');
+            
+            if (DATA_BANNER.length === 0) return;
+            sliderSection.classList.remove('hidden');
+
+            let slidesHTML = '';
+            let dotsHTML = '';
+
+            DATA_BANNER.forEach((banner, index) => {
+                const isActive = index === 0;
+                const bannerContent = `<div class="w-full h-full"><img src="${banner.img}" class="w-full h-full object-cover" alt="Banner ${index + 1}"></div>`;
+
+                slidesHTML += `
+                    <div class="slide-item absolute inset-0 w-full h-full ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'}" id="slide-${index}">
+                        ${bannerContent}
+                    </div>`;
+                    
+                if (DATA_BANNER.length > 1) {
+                    dotsHTML += `<div class="w-2.5 h-2.5 rounded-full bg-white/50 transition-all ${isActive ? 'bg-mystic-500 scale-125' : ''}" id="dot-${index}"></div>`;
+                }
+            });
+
+            container.innerHTML = slidesHTML;
+            dotsContainer.innerHTML = dotsHTML;
+
+            if (DATA_BANNER.length > 1) {
+                setInterval(nextSlide, 4500);
+            }
+        }
+
+        function nextSlide() {
+            const slides = document.querySelectorAll('.slide-item');
+            const dots = document.querySelectorAll('#banner-dots div');
+            if(!slides.length) return;
+
+            slides[currentSlide].classList.replace('opacity-100', 'opacity-0');
+            slides[currentSlide].classList.replace('z-10', 'z-0');
+            if(dots.length > 0) {
+                dots[currentSlide].classList.remove('bg-mystic-500', 'scale-125');
+                dots[currentSlide].classList.add('bg-white/50');
+            }
+
+            currentSlide = (currentSlide + 1) % DATA_BANNER.length;
+
+            slides[currentSlide].classList.replace('opacity-0', 'opacity-100');
+            slides[currentSlide].classList.replace('z-0', 'z-10');
+            if(dots.length > 0) {
+                dots[currentSlide].classList.remove('bg-white/50');
+                dots[currentSlide].classList.add('bg-mystic-500', 'scale-125');
+            }
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('product-container');
+            container.innerHTML = '';
+            DATA_PRODUK.forEach(product => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-sasmita-cardDark rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-[#D4AF37]/20 flex flex-col fade-in";
+                const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price);
+                card.innerHTML = `
+                    <div class="h-56 overflow-hidden bg-gray-100 dark:bg-gray-800 relative">
+                        <img src="${product.img}" alt="${product.name}" class="w-full h-full object-cover hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow text-center">
+                        <h3 class="text-xl font-bold mb-2 tracking-tight font-serif text-gray-900 dark:text-gray-100">${product.name}</h3>
+                        <p class="text-mystic-600 dark:text-mystic-500 font-bold mb-5 text-lg">${formattedPrice}</p>
+                        <div class="mt-auto">
+                            <button onclick="openModal(${product.id})" class="w-full bg-transparent border-2 border-mystic-500 text-mystic-600 dark:text-mystic-500 hover:bg-mystic-500 hover:text-sasmita-dark py-2.5 rounded-lg font-bold transition-all flex justify-center items-center gap-2">
+                                Beli Sekarang
+                            </button>
+                        </div>
+                    </div>`;
+                container.appendChild(card);
+            });
+        }
+
+        const modal = document.getElementById('checkout-modal');
+        function openModal(productId) {
+            const product = DATA_PRODUK.find(p => p.id === productId);
+            if(!product) return;
+            document.getElementById('checkout-product-name').value = product.name;
+            const formattedPrice = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price);
+            document.getElementById('modal-product-info').innerHTML = `
+                <img src="${product.img}" class="w-16 h-16 object-cover rounded-md border border-[#D4AF37]/50">
+                <div>
+                    <h4 class="font-bold text-base leading-tight font-serif">${product.name}</h4>
+                    <span class="text-mystic-600 dark:text-mystic-500 font-bold text-sm">${formattedPrice}</span>
+                </div>`;
+            modal.showModal();
+        }
+
+        function closeModal() {
+            modal.close();
+            document.getElementById('checkout-form').reset();
+        }
+
+        document.getElementById('checkout-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const prodName = document.getElementById('checkout-product-name').value;
+            const custName = document.getElementById('cust-name').value;
+            const custPhone = document.getElementById('cust-phone').value;
+            const custAddr = document.getElementById('cust-address').value;
+            const message = `Rahayu Admin ${NAMA_WEBSITE},\n\nSaya ingin memesan:\n\n*Produk:* ${prodName}\n*Nama:* ${custName}\n*No HP:* ${custPhone}\n*Alamat:* ${custAddr}\n\nMohon informasi total harga beserta ongkirnya. Matur nuwun.`;
+            const waUrl = `https://wa.me/${NOMOR_WHATSAPP}?text=${encodeURIComponent(message)}`;
+            window.open(waUrl, '_blank');
+            closeModal();
+        });
+
+        function toggleTheme() {
+            const htmlClass = document.documentElement.classList;
+            const themeIcon = document.getElementById('theme-icon');
+            if (htmlClass.contains('dark')) {
+                htmlClass.remove('dark');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                htmlClass.add('dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun');
+        }
+
+        function initWebsite() {
+            renderHeaderFooter();
+            renderBanners();
+            renderProducts();
+        }
+        initWebsite();
+    </script>
+</body>
+</html>
